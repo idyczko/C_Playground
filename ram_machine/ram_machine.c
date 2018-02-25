@@ -2,12 +2,14 @@
 #define INSTRUCTIONS_NUMBER 11
 #define INITIAL_MEMORY 10
 
-static int *MEMORY;
-static int *INPUT;
-static int PROGRAM_COUNTER;
+int *MEMORY;
+int *INPUT;
+int PROGRAM_COUNTER;
 
 int atoi(char *);
 void *calloc(size_t, size_t);
+int strcmp(char *, char *);
+void free(void *);
 
 struct node{
   struct node *next;
@@ -31,9 +33,10 @@ int jneg(char *);
 int jzero(char *);
 int halt(char *);
 
-int init(int input[]) {
+int init_ram(int input[]) {
   MEMORY = (int*) calloc(sizeof(int), INITIAL_MEMORY);
   INPUT = input;
+  PROGRAM_COUNTER = 1;
 
   struct node read_node = {NULL, "READ", &read};
   struct node store_node = {NULL, "STORE", &store};
@@ -48,7 +51,28 @@ int init(int input[]) {
   struct node halt_node = {NULL, "HALT", &halt};
 
   insert(read_node);
+  insert(store_node);
+  insert(load_node);
+  insert(add_node);
+  insert(sub_node);
+  insert(half_node);
+  insert(jump_node);
+  insert(jpos_node);
+  insert(jneg_node);
+  insert(jzero_node);
+  insert(halt_node);
   return 0;
+}
+
+int run(char **program) {
+  char *instr;
+  while((instr = *program++) != NULL)
+    if(get(instr)() < 0)
+      break;
+
+  int result = MEMORY[0];
+  free(MEMORY);
+  return result;
 }
 
 int insert(struct node nd) {
@@ -59,6 +83,13 @@ int insert(struct node nd) {
     while(ptr->next != NULL)
       ptr = ptr->next;
     ptr->next = &nd;
+}
+
+int (*get(char *name))() {
+    struct node *ptr = INSTRUCTIONS[hash(name)];
+    while(strcmp(ptr->name, name) != 0)
+      ptr = ptr->next;
+    return ptr->instruction;
 }
 
 int hash(char *name) {
@@ -144,5 +175,6 @@ int jzero(char *operand) {
 };
 
 int halt(char *operand) {
+  PROGRAM_COUNTER = 1;
   return -1;
 };
