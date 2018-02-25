@@ -3,7 +3,10 @@
 #define INITIAL_MEMORY 10
 
 static int *MEMORY;
+static int *INPUT;
+static int PROGRAM_COUNTER;
 
+int atoi(char *);
 void *calloc(size_t, size_t);
 
 struct node{
@@ -28,8 +31,10 @@ int jneg(char *);
 int jzero(char *);
 int halt(char *);
 
-int main() {
+int init(int input[]) {
   MEMORY = (int*) calloc(sizeof(int), INITIAL_MEMORY);
+  INPUT = input;
+
   struct node read_node = {NULL, "READ", &read};
   struct node store_node = {NULL, "STORE", &store};
   struct node load_node = {NULL, "LOAD", &load};
@@ -65,35 +70,79 @@ int hash(char *name) {
 }
 
 int read(char *operand) {
+  if (*operand == '^')
+    MEMORY[0] = INPUT[MEMORY[atoi(++operand)]];
+  else
+    MEMORY[0] = INPUT[atoi(++operand)];
   return 0;
 };
+
 int store(char *operand) {
+  if (*operand == '^')
+    MEMORY[MEMORY[atoi(++operand)]] = MEMORY[0];
+  else
+    MEMORY[atoi(++operand)] = MEMORY[0];
   return 0;
 };
+
 int load(char *operand) {
+  if (*operand == '^')
+    MEMORY[0] = MEMORY[MEMORY[atoi(++operand)]];
+  else if (*operand == '=')
+    MEMORY[0] = atoi(++operand);
+  else
+    MEMORY[0] = MEMORY[atoi(++operand)];
   return 0;
 };
+
 int add(char *operand) {
+  if (*operand == '^')
+    MEMORY[0] += MEMORY[MEMORY[atoi(++operand)]];
+  else if (*operand == '=')
+    MEMORY[0] += atoi(++operand);
+  else
+    MEMORY[0] += MEMORY[atoi(++operand)];
   return 0;
 };
+
 int sub(char *operand) {
+  if (*operand == '^')
+    MEMORY[0] -= MEMORY[MEMORY[atoi(++operand)]];
+  else if (*operand == '=')
+    MEMORY[0] -= atoi(++operand);
+  else
+    MEMORY[0] -= MEMORY[atoi(++operand)];
   return 0;
 };
+
 int half(char *operand) {
+  MEMORY[0] /= 2;
   return 0;
 };
+
 int jump(char *operand) {
+  PROGRAM_COUNTER = atoi(operand);
   return 0;
 };
+
 int jpos(char *operand) {
+  if(MEMORY[0] > 0)
+    PROGRAM_COUNTER = atoi(operand);
   return 0;
 };
+
 int jneg(char *operand) {
+  if(MEMORY[0] < 0)
+    PROGRAM_COUNTER = atoi(operand);
   return 0;
 };
+
 int jzero(char *operand) {
+  if(MEMORY[0] == 0)
+    PROGRAM_COUNTER = atoi(operand);
   return 0;
 };
+
 int halt(char *operand) {
-  return 0;
+  return -1;
 };
