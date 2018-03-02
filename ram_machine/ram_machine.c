@@ -83,8 +83,8 @@ int insert(struct node *nd) {
       return 0;
     }
 
-    while((ptr = ptr->next) != NULL);
-    ptr = nd;
+    for(; ptr->next != NULL; ptr = ptr->next);
+      ptr->next = nd;
     return 0;
 }
 
