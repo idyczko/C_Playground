@@ -1,33 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-
-void *calloc(size_t, size_t);
-double log2(double);
-
-struct binary_node {
-  int value;
-  struct binary_node *parent;
-  struct binary_node *left;
-  struct binary_node *right;
-};
-
-struct binary_node_heap {
-  struct binary_node root;
-};
-
-struct binary_table_heap {
-  int elements;
-  int size;
-  int *data;
-};
-// 
-// void add(struct binary_node_heap *h, binary_node *node) {
-//   if (h->root == NULL)
-//     h->root = node;
-//   else
-//     while
-//
-// }
+#include "heap.h"
 
 int parent(int index) {
   return (index - 1)/2;
@@ -93,23 +66,4 @@ void add(struct binary_table_heap *h, int n) {
     return;
   h->data[h->elements++] = n;
   heapify_up(h);
-}
-
-int main(int argc, char *argv[]) {
-  int numbers[20] = {10, 12, 32, 123, 124, 121, 2, 3, 12, 21, 121, 1, 1212, 12, 1, 0563, 39492, 2, 3, 23};
-  struct binary_table_heap h = {0, 100, (int *) calloc(100, sizeof(int))};
-  int i = 0;
-  for(i; i<20;i++)
-    add(&h, numbers[i]);
-
-  printf_heap(h);
-  pop(&h);
-  add(&h, 0);
-  printf_heap(h);
-  for(i=0; i<20;i++)
-    numbers[i] = pop(&h);
-  for(i=0; i<20;i++)
-    printf("%d ", numbers[i]);
-
-  return 0;
 }
