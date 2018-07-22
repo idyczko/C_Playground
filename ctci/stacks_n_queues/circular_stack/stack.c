@@ -42,6 +42,10 @@ int get_next_index(int stack) {
 	return (get_top_index(stack) + 1) % stack_size;
 }
 
+int is_empty(int stack) {
+	return info[stack].size == 0;
+}
+
 int pop(int stack) {
 	const int top_index = get_top_index(stack);
 	auto int result = stack_memory[top_index];
@@ -52,10 +56,6 @@ int pop(int stack) {
 
 int top(int stack) {
 	return stack_memory[get_top_index(stack)];
-}
-
-int is_empty(int stack) {
-	return info[stack].size == 0;
 }
 
 void push(int stack, int value) {
