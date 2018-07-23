@@ -19,12 +19,17 @@ int main(int argc, char* argv[]) {
 	push(0, 14);
 	push(0, 15);
 	push(0, 16);
+	pop(0);
+	pop(0);
+	pop(0);
 	push(1, 4);
 	push(1, 5);
 	push(1, 6);
 	push(2, 7);
 	push(2, 8);
 	push(2, 9);
+	push(2, 10);
+	push(2, 11);
 	printf("There you go: %d, %d, %d, %d, %d\n", pop(0), top(0), top(0), pop(0), top(0));
 	printf("There you go: %d\n",top(0));
 	printf("There you go: %d, %d, %d, %d, %d\n", pop(2), top(2), top(2), pop(2), top(2));
