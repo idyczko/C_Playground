@@ -4,8 +4,10 @@
 #include <stdlib.h>
 
 void *calloc(size_t, size_t);
+void free(void *);
 
 void init();
+void free();
 void push(int);
 int pop();
 int pop(int)
