@@ -28,30 +28,36 @@ void free_stack() {
 }
 
 void expand_stack() {
+	printf("Expanding stack...\n");
 	int **temp_stack = (int **) calloc(stacks*GROWTH_FACTOR, sizeof(int *));
 	int *temp_size = (int *) calloc(stacks*GROWTH_FACTOR, sizeof(int));
 	int i, j;
 	for (i = 0; i < stacks * GROWTH_FACTOR; i++) {
 		temp_size[i] = i < stacks ? size[i] : 0;
 		temp_stack[i] = (int *) calloc((i < stacks ? size[i] : MAX_CAPACITY), sizeof(int));
-		if (i < stacks)
-			for (j = 0; j < size[i]; i++)
+		if (i < stacks) {
+			for (j = 0; j < size[i]; j++)
 				temp_stack[i][j] = multi_stack[i][j];
-		free(multi_stack[i]);
+			free(multi_stack[i]);
+		}
 	}
 	free(multi_stack);
 	free(size);
 	size = temp_size;
 	multi_stack = temp_stack;
 	stacks *= GROWTH_FACTOR;
+	printf("Expanding complete...\n");
 }
 
 void push (int value) {
+	printf("Pushing: %d, Stacks: %d, Current: %d, Size: %d...\n", value, stacks, current, size[current]);
 	if (size[current] < MAX_CAPACITY) {
+		printf("There is still some place... Pushing on stack no. %d\n", current);
 		multi_stack[current][size[current]++] = value;
+		return;
 	} 
-	
-	if (stacks - 1 > current) {
+	printf("Switching stacks...\n");
+	if ((stacks - 1) == current) {
 		expand_stack();
 	}
 	multi_stack[++current][0] = value;
@@ -77,12 +83,13 @@ int is_empty() {
 
 void print_diagnostics() {
 	auto int i, j;
-	printf("Stacks: \n", stacks);
-	printf("Current: \n", current);
+	printf("Stacks: %d\n", stacks);
+	printf("Current: %d\n", current);
 	printf("Sizes: \n");
 	for (i = 0; i < stacks; i++) {
 		printf("%d\t", size[i]);
 	}
+	printf("\n");
 	for (j = MAX_CAPACITY - 1; j >= 0; j--) {
 		for (i = 0; i < stacks; i++) {
 			if (j < size[i])

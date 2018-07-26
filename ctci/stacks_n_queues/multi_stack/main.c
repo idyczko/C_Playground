@@ -12,5 +12,10 @@ int main(int argc, char *argv[]) {
 	push(7);
 	push(8);
 	push(9);
+	push(10);
+	push(11);
+	push(12);
+	push(13);
+	push(14);
 	print_diagnostics();
 }
